@@ -2,57 +2,69 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Recommender System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .text-white {
-            color: white;
-        }
-    </style>
-</head>
-<body style="background-color:black">
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg" style="background-color:#00a65a">
-        <div class="container-fluid">
-            <span class="navbar-brand text-white">My Book Recommender System</span>
-            <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link text-white" href="/">Home</a></li>
-                <li class="nav-item"><a class="nav-link text-white" href="/recommend">Recommend</a></li>
-                <li class="nav-item"><a class="nav-link text-white" href="/about">About</a></li>
-            </ul>
-        </div>
-    </nav>
+    <title>Recommend Books</title>
 
-    <!-- Main Content -->
-    <div class="container mt-4">
-        <div class="row">
-            <div class="col-md-12">
-                <h1 class="text-white display-4">Recommended Books</h1>
-                <form action="/recommend_books" method="POST" class="mb-4">
-                    <input name="user_input" type="text" class="form-control mb-3" placeholder="Search for books...">
-                    <button type="submit" class="btn btn-primary">Search</button>
-                </form>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+
+        <span class="navbar-brand">📚 BookAI</span>
+
+        <span class="navbar-center-title">Find Your Next Book</span>
+
+        <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+            <li class="nav-item"><a class="nav-link active" href="/recommend">Recommend</a></li>
+        </ul>
+
+    </div>
+</nav>
+
+<!-- CONTENT -->
+<div class="container mt-5">
+
+    <!-- SEARCH -->
+    <form action="/recommend_books" method="POST" class="d-flex gap-3 mb-4">
+        <input 
+            name="user_input" 
+            type="text" 
+            class="form-control search-box" 
+            placeholder="Search books (e.g. Harry Potter)">
+        
+        <button type="submit" class="btn btn-custom">🔍 Search</button>
+    </form>
+
+    <!-- ERROR MESSAGE -->
+    {% if error_message %}
+    <div class="alert alert-danger text-center">
+        {{ error_message }}
+    </div>
+    {% endif %}
+
+    <!-- RESULTS -->
+    {% if recommended_books %}
+    <div class="row">
+        {% for i in recommended_books %}
+        <div class="col-md-3 mb-4">
+            <div class="card">
+                <img src="{{ i.image_url }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ i.title }}</h5>
+                    <p class="card-text">{{ i.author }}</p>
+                </div>
             </div>
         </div>
-        {% if error_message %}
-        <div class="alert alert-warning mt-4">{{ error_message }}</div>
-        {% endif %}
-        {% if recommended_books %}
-        <div class="row">
-           {% for i in recommended_books %}
-                <div class="col-md-3 mt-4">
-                    <div class="card">
-                        <img class="card-img-top" src="{{ i.image_url }}" alt="{{ i.title }} Book Cover">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ i.title }}</h5>
-                            <p class="card-text">{{ i.author }}</p>
-                        </div>
-                    </div>
-                </div>
-           {% endfor %}
-        </div>
-        {% endif %}
+        {% endfor %}
     </div>
+    {% endif %}
+
+</div>
+
 </body>
 </html>
